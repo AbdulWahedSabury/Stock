@@ -2,7 +2,6 @@
 namespace App\Http\Livewire\admin\product;
 use App\Models\Product;
 use Livewire\Component;
-use App\Models\Provider;
 use Illuminate\Support\Facades\Validator;
 
 class ProductList extends Component

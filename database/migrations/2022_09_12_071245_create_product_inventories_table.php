@@ -14,10 +14,11 @@ class CreateProductInventoriesTable extends Migration
     public function up()
     {
         Schema::create('product_inventories', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('stock_id')->constrained('stocks');
             $table->unsignedDecimal('quantity', 12, 2);
-            $table->primary(['product_id', 'stock_id']);
+            $table->timestamps();
         });
     }
 

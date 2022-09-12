@@ -24,7 +24,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Description</th>
                     <th scope="col">Purchase price</th>
-                    <th scope="col">Quantity</th>
+
                   </tr>
                 </thead>
                 <tbody>
@@ -37,7 +37,6 @@
                       </td>
                       <td>{{ $product->description }}</td>
                       <td>{{ $product->p_price }} AF</td>
-                      <td>{{ $product->quantity }}</td>
                       <td>
                         <a href="" wire:click.prevent="edit({{ $product }})">
                           <i class="fa fa-edit mr-2"></i>
