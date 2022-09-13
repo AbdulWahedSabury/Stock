@@ -92,8 +92,7 @@
           </p>
         </a>
       </li>
-
-      {{-- <!-- sales -->
+      <!-- sales -->
       <li class="nav-item">
         <a href="{{ route('admin.sales') }}"
           class="nav-link {{ request()->is('admin/sales') ? 'active' : '' }}">
@@ -102,7 +101,7 @@
             Sales
           </p>
         </a>
-      </li> --}}
+      </li>
       <!-- users -->
       <li class="nav-item">
         <a href="{{ route('admin.users') }}" class="nav-link {{ request()->is('admin/users') ? 'active' : '' }}">

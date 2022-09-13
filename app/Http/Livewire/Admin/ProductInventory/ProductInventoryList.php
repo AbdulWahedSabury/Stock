@@ -6,7 +6,6 @@ use Throwable;
 use App\Models\Stock;
 use App\Models\Product;
 use Livewire\Component;
-use App\Models\product_inventory;
 use App\Models\productInventory;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,26 +37,13 @@ class ProductInventoryList extends Component
 
     public function create()
     {
-        try{
-            $list = Validator::make($this->state, [
+            $inventory = Validator::make($this->state, [
                 'stock_id' => 'required|integer',
                 'product_id' => 'required|numeric',
-                'quantity' => 'required|numeric',
             ])->validate();
-            $this->selectedProduct = Product::getRecord($list['product_id']);
-            if($list['quantity'] > $this->selectedProduct['quantity']){
-                $this->dispatchBrowserEvent('error', ['message' => 'please enter a valid quantity!']);
-                return redirect()->back();
-            }
-            $this->selectedProduct['quantity'] -= $list['quantity'];
-            productInventory::create($list);
-            $this->selectedProduct->update();
+            productInventory::create($inventory);
             $this->dispatchBrowserEvent('hide-form', ['message' => 'Record added successfully!']);
             return redirect()->back();
-        } catch (Throwable $e) {
-            $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
-            return redirect()->back();
-        }
     }
 
     public function edit(productInventory $inventory)
@@ -70,12 +56,12 @@ class ProductInventoryList extends Component
 
     public function saveChanges()
     {
-        $list = Validator::make($this->state, [
+        $inventory = Validator::make($this->state, [
             'stock_id' => 'required|integer',
             'product_id' => 'required|numeric',
             'quantity' => 'required|numeric',
         ])->validate();
-        $this->list->update($list);
+        $this->inventory->update($inventory);
         $this->dispatchBrowserEvent('hide-form', ['message' => 'purchase updated successfully!']);
     }
 
@@ -87,8 +73,8 @@ class ProductInventoryList extends Component
 
     public function delete()
     {
-        $list = Purchase::getRecord($this->confirmationDeleteId);
-        $list->delete();
+        $inventory = productInventory::getRecord($this->confirmationDeleteId);
+        $inventory->delete();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
     }
 }

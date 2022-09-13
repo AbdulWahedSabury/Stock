@@ -21,10 +21,6 @@ class Product extends Model
     {
         return self::findOrFail($id);
     }
-    public function getRecordsForSale()
-    {
-        return self::where('quantity','>','quantity_sold')->get();
-    }
 
     public function provider()
     {

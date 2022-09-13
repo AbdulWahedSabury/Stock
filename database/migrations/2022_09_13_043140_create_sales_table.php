@@ -15,10 +15,12 @@ class CreateSalesTable extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('stock_id')->constrained('stocks');
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity')->notNull();
+            $table->integer('s_price')->notNull();
             $table->integer('total_price')->default(0);
-            $table->foreignId('customer_id')->constrained('customers');
             $table->timestamps();
         });
     }

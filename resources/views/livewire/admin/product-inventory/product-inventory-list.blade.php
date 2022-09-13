@@ -120,20 +120,22 @@
                 @enderror
               </div>
             </div>
-            <div class="row">
-              <div class="form-group col-md-12 col-lg-12">
-                <label for="quantity">Quantity</label>
-                <input type="number" class="form-control
+            @if ($editeState)
+              <div class="row">
+                <div class="form-group col-md-12 col-lg-12">
+                  <label for="quantity">Quantity</label>
+                  <input type="number" class="form-control
                  @error('quantity') is-invalid @enderror"
-                  id="quantity" aria-describedby="emailHelp" placeholder="Quantity" wire:model.defer="state.quantity">
-                @error('quantity')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
+                    id="quantity" aria-describedby="emailHelp" placeholder="Quantity"
+                    wire:model.defer="state.quantity">
+                  @error('quantity')
+                    <div class="invalid-feedback">
+                      {{ $message }}
+                    </div>
+                  @enderror
+                </div>
               </div>
-            </div>
-
+            @endif
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
               <button type="submit" class="btn btn-primary"><i class="fa fa-save pr-2"></i>

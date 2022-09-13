@@ -22,6 +22,7 @@
                   <tr>
                     <th scope="col">Number</th>
                     <th scope="col">Product</th>
+                    <th scope="col">Stock</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">price</th>
                     <th scope="col">Total price</th>
@@ -34,9 +35,8 @@
                   @forelse ($lists as $li)
                     <tr>
                       <th scope="row">{{ $loop->iteration }}</th>
-                      <td>
-                        {{ $li->product->name }}
-                      </td>
+                      <td>{{ $li->product->name }}</td>
+                      <td>{{ $li->stock->name }}</td>
                       <td>{{ $li->quantity }}</td>
                       <td>{{ $li->p_price }}</td>
                       <td>{{ $li->total_price }}</td>
@@ -197,7 +197,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLongTitle">
 
-          <span>Delete product</span>
+          <span>Delete</span>
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -205,12 +205,12 @@
       </div>
       {{-- Add new user form --}}
       <div class="modal-body">
-        <h5>Are you shure that you want to delete this product?</h5>
+        <h5>Are you shure that you want to delete this List?</h5>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>
         <button type="button" class="btn btn-danger" wire:click.prevent="delete"><i class="fa fa-save pr-2"></i>
-          Delete product
+          Delete
         </button>
       </div>
 

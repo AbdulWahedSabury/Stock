@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Purchase;
 use Throwable;
 use App\Models\Stock;
 use App\Models\Product;
+use App\Models\productInventory;
 use Livewire\Component;
 use App\Models\Provider;
 use App\Models\Purchase;
@@ -17,6 +18,7 @@ class PurchaseList extends Component
     public $state = [];
     public $editeState = false;
     public $confirmationDeleteId;
+    public $selectedInventory;
     public $selectedProduct;
 
 
@@ -39,9 +41,9 @@ class PurchaseList extends Component
         $this->editeState = false;
         $this->dispatchBrowserEvent('show-form');
     }
+
     public function create()
     {
-        dd($this->state);
         try {
             $list = Validator::make($this->state, [
                 'product_id' => 'required|numeric',
@@ -51,10 +53,15 @@ class PurchaseList extends Component
                 'p_price' => 'required|numeric'
             ])->validate();
             $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
+
+            $this->selectedInventory = productInventory::getRecord($list['product_id'],$list['stock_id']);
+            $this->selectedInventory->quantity += $this->state['quantity'];
+            $this->selectedInventory->save();
+
             $this->selectedProduct = Product::getRecord($list['product_id']);
-            $this->selectedProduct['quantity'] += $list['quantity'];
-            $this->selectedProduct['p_price'] = $list['p_price'];
-            $this->selectedProduct->update();
+            $this->selectedProduct->p_price = $list['p_price'];
+            $this->selectedProduct->save();
+
             Purchase::create($list);
             $this->dispatchBrowserEvent('hide-form', ['message' => 'Product added successfully!']);
             return redirect()->back();
@@ -74,15 +81,28 @@ class PurchaseList extends Component
 
     public function saveChanges()
     {
+        try {
         $list = Validator::make($this->state, [
             'product_id' => 'required|numeric',
             'provider_id' => 'required|numeric',
+            'stock_id' => 'required|numeric',
             'quantity' => 'required|numeric',
             'p_price' => 'required|numeric'
         ])->validate();
         $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
+
+        $this->selectedProduct = Product::getRecord($list['product_id']);
+        $this->selectedProduct->p_price = $list['p_price'];
+        $this->selectedProduct->save();
+
         $this->list->update($list);
         $this->dispatchBrowserEvent('hide-form', ['message' => 'purchase updated successfully!']);
+        return redirect()->back();
+        } catch (Throwable $e) {
+            $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
+            return redirect()->back();
+        }
+
     }
 
     public function ConfirmationDelete($Id)

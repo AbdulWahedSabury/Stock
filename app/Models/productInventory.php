@@ -12,10 +12,22 @@ class productInventory extends Model
     public $timestamps = false;
     public function getRecords($search = null)
     {
-        return self::query()->with('stock','product')
-        // ->where('name','like','%'.$search.'%')
-        // ->orWhere('description','like','%'.$search.'%')
-        ->paginate(5);
+        return self::query()->with('stock', 'product')
+            // ->where('name','like','%'.$search.'%')
+            // ->orWhere('description','like','%'.$search.'%')
+            ->paginate(5);
+    }
+
+    public function getRecord($product_id = null, $stock_id =null)
+    {
+        return self::where('product_id','=',$product_id)
+        ->where('product_id','=',$product_id)->first();
+    }
+
+    public function getRecordsForSale($id)
+    {
+        return self::where('quantity','>',0)
+        ->where('product_id','=',$id)->get();
     }
 
     public function stock()
