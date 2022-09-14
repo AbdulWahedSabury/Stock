@@ -40,14 +40,22 @@
                       <td>
                         {{ $customer->phone }}
                       </td>
-                      <td>
+                      @if (is_null($customer->deleted_at))
+                        <td>
                         <a href="" wire:click.prevent="edit({{ $customer }})">
                           <i class="fa fa-edit mr-2"></i>
                         </a>
                         <a href="" wire:click.prevent="ConfirmationDelete({{ $customer->id }})">
-                          <i class="fa fa-trash"></i>
+                          <i class="fa fa-trash text-red"></i>
                         </a>
-                      </td>
+                    </td>
+                      @else
+                        <td>
+                        <a href="" wire:click.prevent="restore({{ $customer->id }})">
+                        <i class="fa fa-undo text-lime" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                      @endif
                     </tr>
                   @empty
                     <x-no-record>
@@ -158,7 +166,7 @@
         </div>
         {{-- Add new user form --}}
         <div class="modal-body">
-          <h5>Are you shure that you want to delete this customer?</h5>
+          <h6>Are you shure that you want to delete this customer?</h6>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>

@@ -3,12 +3,13 @@
 namespace App\Http\Livewire\Admin\Sales;
 
 use Exception;
+use Throwable;
 use App\Models\Sale;
+use App\Models\Stock;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\customer;
 use App\Models\productInventory;
-use App\Models\Stock;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,20 +18,16 @@ class SalesList extends Component
     public $search;
     public $sale;
     public $state = [];
-    public $selectedProduct;
-    public $productValidInventory;
-    public $editeSaleState = false;
+    public $selectedInventory;
+    public $editeState  = false;
     public $confirmationProductDeleteId;
-    protected $listeners = ['productSelected' => 'getSelectdProducts'];
     public function render()
     {
         $sales = Sale::getRecords();
-        $products = Product::getRecords();
+        $products = productInventory::getRecordsForSale();
         $customers = customer::getRecords();
         $stocks = Stock::getRecords();
-        return view(
-            'livewire.admin.sales.sales-list',
-            [
+        return view('livewire.admin.sales.sales-list',[
                 'sales' => $sales,
                 'products' => $products,
                 'customers' => $customers,
@@ -46,29 +43,63 @@ class SalesList extends Component
         $this->dispatchBrowserEvent('show-form');
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        dd($this->state);
-        exit;
         $sale = Validator::make($this->state, [
             'customer_id' => 'required|integer',
-            'stock_id' => 'required|integer',
-            'product_id' => 'required|numeric',
+            'inventory_id' => 'required|numeric',
             'quantity' => 'required|numeric',
             's_price' => 'required|numeric',
         ])->validate();
-        $this->selectedProduct = Product::getRecord($sale['product_id']);
-        $sale['total_price'] = $sale['quantity'] * $this->selectedProduct['s_price'];
-        $this->selectedProduct['quantity_sold'] += $sale['quantity'];
+        try{
+        $this->selectedInventory = productInventory::getRecord($sale['inventory_id']);
+        $sale['total_price'] = $sale['quantity'] * $sale['s_price'];
+        $this->selectedInventory['quantity'] -= $sale['quantity'];
+
         Sale::create($sale);
-        $this->selectedProduct->update();
+        $this->selectedInventory->update();
+
         $this->dispatchBrowserEvent('hide-form', ['message' => 'Record added successfully!']);
         return redirect()->back();
+        } catch (Throwable $e) {
+            $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
+            return redirect()->back();
+        }
     }
-    public function getSelectdProducts($id)
+
+    public function edit(Sale $sale)
     {
-        $this->reset();
-        $this->productValidInventory = productInventory::getRecordsForSale($id);
-        dd($this->productValidInventory);
+        $this->sale = $sale;
+        $this->editeState  = true;
+        $this->state = $sale->toArray();
+        $this->dispatchBrowserEvent('show-form');
+    }
+
+    public function saveChanges()
+    {
+            $sale = Validator::make($this->state, [
+                'customer_id' => 'required|integer',
+                'inventory_id' => 'required|numeric',
+                'quantity' => 'required|numeric',
+                's_price' => 'required|numeric',
+            ])->validate();
+            $sale['total_price'] = $sale['quantity'] * $sale['s_price'];
+            $this->sale->update($sale);
+            $this->dispatchBrowserEvent('hide-form', ['message' => 'Sale list updated successfully!']);
+            return redirect()->back();
+
+    }
+
+    public function ConfirmationDelete($Id)
+    {
+        $this->confirmationDeleteId = $Id;
+        $this->dispatchBrowserEvent('show-delete-form');
+    }
+
+    public function delete()
+    {
+        $list = Sale::getRecord($this->confirmationDeleteId);
+        $list->delete();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
     }
 }

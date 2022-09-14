@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Admin\Customers;
 
 use Livewire\Component;
 use App\Models\customer;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class CustomersList extends Component
@@ -17,8 +18,7 @@ class CustomersList extends Component
     public function render()
     {
         $customers = customer::getRecords($this->search);
-        return view(
-            'livewire.admin.customers.customers-list',
+        return view('livewire.admin.customers.customers-list',
             ['customers' => $customers]
         )->layout('admin.layouts.app');
     }
@@ -70,8 +70,17 @@ class CustomersList extends Component
     public function delete()
     {
         $customer = customer::getRecord($this->confirmationCustomerDeleteId);
-        $customer->delete();
+        $customer->deleted_at = Carbon::now();
+        $customer->save();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'customer Deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        $customer = customer::getRecord($id);
+        $customer->deleted_at = Null;
+        $customer->save();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'customer restored successfully!']);
     }
 
 }

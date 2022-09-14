@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Stock;
 
+use Carbon\Carbon;
 use App\Models\Stock;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
@@ -16,8 +17,7 @@ class StochList extends Component
     public function render()
     {
         $stocks = Stock::getRecords($this->search);
-        return view(
-            'livewire.admin.stock.stoch-list',
+        return view('livewire.admin.stock.stoch-list',
             ['stocks' => $stocks]
         )->layout('admin.layouts.app');
     }
@@ -67,7 +67,16 @@ class StochList extends Component
     public function delete()
     {
         $stock = Stock::getRecord($this->confirmationDeleteId);
-        $stock->delete();
+        $stock->deleted_at = Carbon::now();
+        $stock->save();
         $this->dispatchBrowserEvent('hide-delete-form', ['message' => 'stock Deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        $stock = Stock::getRecord($id);
+        $stock->deleted_at = Null;
+        $stock->save();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'customer restored successfully!']);
     }
 }

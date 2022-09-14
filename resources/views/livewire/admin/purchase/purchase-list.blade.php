@@ -205,7 +205,7 @@
       </div>
       {{-- Add new user form --}}
       <div class="modal-body">
-        <h5>Are you shure that you want to delete this List?</h5>
+        <h6>Are you shure that you want to delete this List?</h6>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>

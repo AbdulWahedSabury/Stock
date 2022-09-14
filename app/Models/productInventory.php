@@ -18,16 +18,14 @@ class productInventory extends Model
             ->paginate(5);
     }
 
-    public function getRecord($product_id = null, $stock_id =null)
+    public function getRecord($id)
     {
-        return self::where('product_id','=',$product_id)
-        ->where('product_id','=',$product_id)->first();
+        return self::where('id','=',$id)->first();
     }
 
-    public function getRecordsForSale($id)
+    public function getRecordsForSale()
     {
-        return self::where('quantity','>',0)
-        ->where('product_id','=',$id)->get();
+        return self::where('quantity','>',0)->get();
     }
 
     public function stock()

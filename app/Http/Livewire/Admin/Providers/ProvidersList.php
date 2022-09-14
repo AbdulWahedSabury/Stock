@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Admin\Providers;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Provider;
 use Illuminate\Support\Facades\Validator;
@@ -71,8 +72,17 @@ class ProvidersList extends Component
     public function delete()
     {
         $provider = Provider::getRecord($this->confirmationProviderDeleteId);
-        $provider->delete();
+        $provider->deleted_at = Carbon::now();
+        $provider->save();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'provider Deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        $provider = Provider::getRecord($id);
+        $provider->deleted_at = Null;
+        $provider->save();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'customer restored successfully!']);
     }
 
 }

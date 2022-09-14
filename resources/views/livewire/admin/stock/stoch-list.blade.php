@@ -23,6 +23,7 @@
                     <th scope="col">Number</th>
                     <th scope="col">Name</th>
                     <th scope="col">Address</th>
+                    <th scope="col">Oprations</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -34,14 +35,22 @@
                         {{ $stock->name }}
                       </td>
                       <td>{{ $stock->address }}</td>
-                      <td>
+                      @if (is_null($stock->deleted_at))
+                        <td>
                         <a href="" wire:click.prevent="edit({{ $stock }})">
                           <i class="fa fa-edit mr-2"></i>
                         </a>
                         <a href="" wire:click.prevent="ConfirmationDelete({{ $stock->id }})">
-                          <i class="fa fa-trash"></i>
+                          <i class="fa fa-trash text-red"></i>
                         </a>
-                      </td>
+                    </td>
+                      @else
+                        <td>
+                        <a href="" wire:click.prevent="restore({{ $stock->id }})">
+                        <i class="fa fa-undo text-lime" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                      @endif
                     </tr>
                   @empty
                     <x-no-record>
@@ -141,7 +150,7 @@
       </div>
       {{-- Add new user form --}}
       <div class="modal-body">
-        <h5>Are you shure that you want to delete this Stcok?</h5>
+        <h6>Are you shure that you want to delete this Stcok?</h6>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancle</button>

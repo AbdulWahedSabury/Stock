@@ -44,14 +44,14 @@ class PurchaseList extends Component
 
     public function create()
     {
+        $list = Validator::make($this->state, [
+            'product_id' => 'required|numeric',
+            'provider_id' => 'required|numeric',
+            'stock_id' => 'required|numeric',
+            'quantity' => 'required|numeric',
+            'p_price' => 'required|numeric'
+        ])->validate();
         try {
-            $list = Validator::make($this->state, [
-                'product_id' => 'required|numeric',
-                'provider_id' => 'required|numeric',
-                'stock_id' => 'required|numeric',
-                'quantity' => 'required|numeric',
-                'p_price' => 'required|numeric'
-            ])->validate();
             $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
 
             $this->selectedInventory = productInventory::getRecord($list['product_id'],$list['stock_id']);

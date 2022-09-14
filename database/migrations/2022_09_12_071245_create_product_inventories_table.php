@@ -17,7 +17,7 @@ class CreateProductInventoriesTable extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('products');
             $table->foreignId('stock_id')->constrained('stocks');
-            $table->unsignedDecimal('quantity', 12, 2);
+            $table->integer('quantity')->default(0);
             $table->timestamps();
         });
     }

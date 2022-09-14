@@ -31,5 +31,6 @@
             dropdownParent: $('#myModal'),
         })
     })
+
 </script>
 @endpush
