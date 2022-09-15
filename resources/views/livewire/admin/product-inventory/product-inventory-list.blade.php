@@ -36,14 +36,22 @@
                       </td>
                       <td>{{ $in->stock->name }}</td>
                       <td>{{ $in->quantity }}</td>
-                      <td>
+                      @if (is_null($in->deleted_at))
+                        <td>
                         <a href="" wire:click.prevent="edit({{ $in }})">
                           <i class="fa fa-edit mr-2"></i>
                         </a>
                         <a href="" wire:click.prevent="ConfirmationDelete({{ $in->id }})">
-                          <i class="fa fa-trash"></i>
+                          <i class="fa fa-trash text-red"></i>
                         </a>
-                      </td>
+                    </td>
+                      @else
+                        <td>
+                        <a href="" wire:click.prevent="restore({{ $in->id }})">
+                        <i class="fa fa-undo text-lime" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                      @endif
                     </tr>
                   @empty
                     <x-no-record>

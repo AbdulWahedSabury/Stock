@@ -6,6 +6,7 @@ use Throwable;
 use App\Models\Stock;
 use App\Models\Product;
 use Livewire\Component;
+use Illuminate\Support\Carbon;
 use App\Models\productInventory;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,6 +24,7 @@ class ProductInventoryList extends Component
         $stocks = Stock::getRecords();
         $products = Product::getRecords();
         $inventories = productInventory::getRecords($this->state);
+
         return view('livewire.admin.product-inventory.product-inventory-list',
         ['inventories' => $inventories,
         'stocks' => $stocks,
@@ -74,7 +76,16 @@ class ProductInventoryList extends Component
     public function delete()
     {
         $inventory = productInventory::getRecord($this->confirmationDeleteId);
-        $inventory->delete();
+        $inventory->deleted_at = Carbon::now();
+        $inventory->save();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        $inventory = productInventory::getRecord($id);
+        $inventory->deleted_at = Null;
+        $inventory->save();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product restored successfully!']);
     }
 }

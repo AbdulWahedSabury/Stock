@@ -2,6 +2,7 @@
 namespace App\Http\Livewire\admin\product;
 use App\Models\Product;
 use Livewire\Component;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class ProductList extends Component
@@ -63,8 +64,17 @@ class ProductList extends Component
     public function delete()
     {
         $product = Product::getRecord($this->confirmationDeleteId);
-        $product->delete();
+        $product->deleted_at = Carbon::now();
+        $product->save();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
+    }
+
+    public function restore($id)
+    {
+        $product = Product::getRecord($id);
+        $product->deleted_at = Null;
+        $product->save();
+        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product restored successfully!']);
     }
 
 }

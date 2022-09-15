@@ -37,14 +37,22 @@
                       </td>
                       <td>{{ $product->description }}</td>
                       <td>{{ $product->p_price }} AF</td>
-                      <td>
+                      @if (is_null($product->deleted_at))
+                        <td>
                         <a href="" wire:click.prevent="edit({{ $product }})">
                           <i class="fa fa-edit mr-2"></i>
                         </a>
                         <a href="" wire:click.prevent="ConfirmationDelete({{ $product->id }})">
-                          <i class="fa fa-trash"></i>
+                          <i class="fa fa-trash text-red"></i>
                         </a>
-                      </td>
+                    </td>
+                      @else
+                        <td>
+                        <a href="" wire:click.prevent="restore({{ $product->id }})">
+                        <i class="fa fa-undo text-lime" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                      @endif
                     </tr>
                   @empty
                     <x-no-record>
