@@ -37,4 +37,13 @@ class productInventory extends Model
     {
         return $this->belongsTo(Product::class)->withTrashed();
     }
+
+    public function getRecordsForPurchase()
+    {
+        return self::join('stocks', 'stocks.id', '=', 'product_inventories.stock_id')
+        ->join('products', 'products.id', '=', 'product_inventories.product_id')
+        ->whereNull('product_inventories.deleted_at')
+        ->whereNull('stocks.deleted_at')
+        ->whereNull('products.deleted_at')->get();
+    }
 }

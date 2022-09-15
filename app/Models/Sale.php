@@ -13,8 +13,6 @@ class Sale extends Model
     public function getRecords($search = null)
     {
         return self::query()->with('inventory','customer')
-        // ->where('title','like','%'.$search.'%')
-        // ->orWhere('description','like','%'.$search.'%')
         ->latest()->paginate(5);
     }
 

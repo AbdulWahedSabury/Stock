@@ -25,6 +25,11 @@ class Provider extends Model
         return self::withTrashed()->findOrFail($id);
     }
 
+    public function getRecordsForPurchase()
+    {
+        return self::all();
+    }
+
     public function products()
     {
         return $this->hasMany(Product::class);

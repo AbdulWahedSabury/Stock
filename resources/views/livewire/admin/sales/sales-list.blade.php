@@ -77,9 +77,9 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">
                     @if ($editeState)
-                        <span>Edit Sale Record</span>
+                        <span>Edit</span>
                     @else
-                        <span>Add new Sale Record</span>
+                        <span>Add new record</span>
                     @endif
                     </h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -109,14 +109,14 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-md-12 col-lg-12">
-                            <label>Select product</label>
+                            <label>Select inventory</label>
                             <div id="myModal"
                             class="@error('inventory_id') is-invalid border border-danger rounded custom-error @enderror">
                             <x-select2 wire:model="state.inventory_id" id="inventory_id" placeholder="Select product">
-                                <option>select product</option>
-                                @foreach ($products as $product)
-                                <option value="{{ $product->id }}">{{ $product->product->name }} |
-                                    {{ $product->stock->name }} | {{ $product->product->p_price }} Af | {{ $product->quantity }}</option>
+                                <option>select inventory</option>
+                                @foreach ($inventories as $inv)
+                                <option value="{{ $inv->id }}">{{ $inv->product->name }} |
+                                    {{ $inv->stock->name }} | {{ $inv->product->p_price }} Af | {{ $inv->quantity }}</option>
                                 @endforeach
                             </x-select2>
                             </div>
@@ -202,12 +202,4 @@
             </div>
         </div>
     </div>
-@push('js')
-<script>
-    $("#inventory_id").change(function() {
-      let a = this.value;
-      $("#stock_id").val(a);
-    });
-</script>
-@endpush
 @include('livewire.admin.sales.js');

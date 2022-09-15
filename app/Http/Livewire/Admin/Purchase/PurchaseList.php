@@ -25,8 +25,9 @@ class PurchaseList extends Component
     public function render()
     {
         $lists = Purchase::getRecords($this->search);
-        $providers = Provider::all();
-        $inventories = productInventory::all();
+        $providers = Provider::getRecordsForPurchase();
+        $inventories = productInventory::getRecordsForPurchase ();
+
         return view('livewire.admin.purchase.purchase-list',
         ['lists' => $lists,
         'providers' => $providers,
