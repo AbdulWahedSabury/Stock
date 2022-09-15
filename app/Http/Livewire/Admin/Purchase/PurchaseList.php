@@ -3,12 +3,12 @@
 namespace App\Http\Livewire\Admin\Purchase;
 
 use Throwable;
-use App\Models\Stock;
 use App\Models\Product;
-use App\Models\productInventory;
 use Livewire\Component;
 use App\Models\Provider;
 use App\Models\Purchase;
+use App\Models\productInventory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseList extends Component
@@ -25,14 +25,12 @@ class PurchaseList extends Component
     public function render()
     {
         $lists = Purchase::getRecords($this->search);
-        $providers = Provider::getRecords();
-        $products = Product::getRecords();
-        $stocks = Stock::getRecords();
+        $providers = Provider::all();
+        $inventories = productInventory::all();
         return view('livewire.admin.purchase.purchase-list',
         ['lists' => $lists,
         'providers' => $providers,
-        'products' => $products,
-        'stocks' => $stocks])->layout('admin.layouts.app');
+        'inventories' => $inventories])->layout('admin.layouts.app');
     }
 
     public function add()
@@ -44,28 +42,34 @@ class PurchaseList extends Component
 
     public function create()
     {
+
         $list = Validator::make($this->state, [
-            'product_id' => 'required|numeric',
             'provider_id' => 'required|numeric',
-            'stock_id' => 'required|numeric',
+            'inventory_id' => 'required|numeric',
             'quantity' => 'required|numeric',
             'p_price' => 'required|numeric'
         ])->validate();
+
         try {
+            DB::beginTransaction();
             $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
 
-            $this->selectedInventory = productInventory::getRecord($list['product_id'],$list['stock_id']);
+            $this->selectedInventory = productInventory::getRecord($list['inventory_id']);
             $this->selectedInventory->quantity += $this->state['quantity'];
-            $this->selectedInventory->save();
 
-            $this->selectedProduct = Product::getRecord($list['product_id']);
+            $this->selectedProduct = Product::getRecord($this->selectedInventory->product_id);
+
             $this->selectedProduct->p_price = $list['p_price'];
-            $this->selectedProduct->save();
 
+            $this->selectedInventory->save();
+            $this->selectedProduct->save();
             Purchase::create($list);
+
+            DB::commit();
             $this->dispatchBrowserEvent('hide-form', ['message' => 'Product added successfully!']);
             return redirect()->back();
-        } catch (Throwable $e) {
+        } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
             return redirect()->back();
         }
@@ -81,24 +85,41 @@ class PurchaseList extends Component
 
     public function saveChanges()
     {
-        try {
         $list = Validator::make($this->state, [
-            'product_id' => 'required|numeric',
             'provider_id' => 'required|numeric',
-            'stock_id' => 'required|numeric',
+            'inventory_id' => 'required|numeric',
             'quantity' => 'required|numeric',
             'p_price' => 'required|numeric'
         ])->validate();
-        $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
 
-        $this->selectedProduct = Product::getRecord($list['product_id']);
-        $this->selectedProduct->p_price = $list['p_price'];
-        $this->selectedProduct->save();
+        try {
+            DB::beginTransaction();
+            $list['total_price'] = $this->state['p_price'] * $this->state['quantity'];
 
-        $this->list->update($list);
-        $this->dispatchBrowserEvent('hide-form', ['message' => 'purchase updated successfully!']);
-        return redirect()->back();
-        } catch (Throwable $e) {
+            $this->selectedInventory = productInventory::getRecord($list['inventory_id']);
+            $this->selectedProduct = Product::getRecord($this->selectedInventory->product_id);
+            $previousList = Purchase::getRecord($this->state['id']);
+
+            if($list['quantity'] > $previousList['quantity']){
+                $newQuantity = $list['quantity'] - $previousList['quantity'];
+                $this->selectedInventory->quantity += $newQuantity;
+            }
+
+            if ($list['quantity'] < $previousList['quantity']){
+                $newQuantity = $previousList['quantity'] - $list['quantity'];
+                $this->selectedInventory->quantity -= $newQuantity;
+            }
+            $this->selectedProduct->p_price = $list['p_price'];
+
+            $this->selectedInventory->save();
+            $this->selectedProduct->save();
+            $this->list->update($list);
+
+            DB::commit();
+            $this->dispatchBrowserEvent('hide-form', ['message' => 'list Updated successfully!']);
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
             $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
             return redirect()->back();
         }

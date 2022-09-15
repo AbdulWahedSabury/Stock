@@ -35,8 +35,8 @@
                   @forelse ($lists as $li)
                     <tr>
                       <th scope="row">{{ $loop->iteration }}</th>
-                      <td>{{ $li->product->name }}</td>
-                      <td>{{ $li->stock->name }}</td>
+                      <td>{{ $li->inventory->product->name }}</td>
+                      <td>{{ $li->inventory->stock->name }}</td>
                       <td>{{ $li->quantity }}</td>
                       <td>{{ $li->p_price }}</td>
                       <td>{{ $li->total_price }}</td>
@@ -69,6 +69,7 @@
     </div>
     <!-- /.content -->
   </div>
+
   <!--Edit And Add new Modal -->
   <div class="modal fade" id="form" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
     aria-hidden="true" wire:ignore.self>
@@ -94,7 +95,6 @@
                 <label>Select Provider</label>
                 <div class="@error('provider_id') is-invalid border border-danger rounded custom-error @enderror">
                   <x-select2 wire:model.defer="state.provider_id" id="provider_id" placeholder="Select Stock">
-                    <option>select Provider</option>
                     @foreach ($providers as $provider)
                       <option value="{{ $provider->id }}">{{ $provider->name }}</option>
                     @endforeach
@@ -109,36 +109,18 @@
             </div>
             <div class="row">
               <div class="form-group col-md-12 col-lg-12">
-                <label>Select product</label>
+                <label>Select Inventiry</label>
                 <div id="myModal"
-                  class="@error('product_id') is-invalid border border-danger rounded custom-error @enderror">
-                  <x-select2 wire:model="state.product_id" id="product_id" placeholder="Select product">
-                    <option>select product</option>
-                    @foreach ($products as $product)
-                      <option value="{{ $product->id }}">{{ $product->name }}</option>
+                  class="@error('inventory_id') is-invalid border border-danger rounded custom-error @enderror">
+                  <x-select2 wire:model="state.inventory_id" id="inventory_id" placeholder="Select product">
+                    @foreach ($inventories as $inv)
+                      <option value="{{ $inv->id }}">
+                        {{ $inv->product->name }} |
+                        {{ $inv->stock->name }}</option>
                     @endforeach
                   </x-select2>
                 </div>
-                @error('product_id')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
-              </div>
-            </div>
-            <div class="row">
-              <div class="form-group col-md-12 col-lg-12">
-                <label>Select stock</label>
-                <div id="myModal"
-                  class="@error('stock_id') is-invalid border border-danger rounded custom-error @enderror">
-                  <x-select2 wire:model="state.stock_id" id="stock_id" placeholder="Select product">
-                    <option>select product</option>
-                    @foreach ($stocks as $stock)
-                      <option value="{{ $stock->id }}">{{ $stock->name }}</option>
-                    @endforeach
-                  </x-select2>
-                </div>
-                @error('stock_id')
+                @error('inventory_id')
                   <div class="invalid-feedback">
                     {{ $message }}
                   </div>
@@ -189,8 +171,8 @@
   </div>
 </div>
 <!--Delete Modal -->
-<div class="modal fade" id="deleteConfirmatinForm" tabindex="-1" role="dialog"
-  aria-labelledby="exampleModalLongTitle" aria-hidden="true" wire:ignore.self>
+<div class="modal fade" id="deleteConfirmatinForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+  aria-hidden="true" wire:ignore.self>
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 

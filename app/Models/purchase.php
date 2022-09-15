@@ -11,7 +11,7 @@ class Purchase extends Model
     protected $guarded = [];
     public function getRecords($search = null)
     {
-        return self::query()->with('provider','product','stock')
+        return self::query()->with('provider','inventory')
         ->where('quantity','like','%'.$search.'%')
         ->latest()->paginate(5);
     }
@@ -23,17 +23,12 @@ class Purchase extends Model
 
     public function provider()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Provider::class)->withTrashed();
     }
 
-    public function product()
+    public function inventory()
     {
-        return $this->belongsTo(Product::class);
-    }
-
-    public function stock()
-    {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(productInventory::class);
     }
 
 }

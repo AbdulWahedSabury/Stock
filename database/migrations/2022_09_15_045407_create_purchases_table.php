@@ -15,11 +15,10 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products');
+            $table->foreignId('inventory_id')->constrained('product_inventories');
             $table->foreignId('provider_id')->constrained('providers');
-            $table->foreignId('stock_id')->constrained('stocks');
             $table->integer('quantity')->notNull();
-            $table->integer('p_price')->default(0);
+            $table->integer('p_price')->notNull();
             $table->integer('total_price')->default(0);
             $table->timestamps();
         });
