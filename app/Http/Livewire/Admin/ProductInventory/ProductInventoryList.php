@@ -21,8 +21,8 @@ class ProductInventoryList extends Component
     public $selectedProduct;
     public function render()
     {
-        $stocks = Stock::getRecords();
-        $products = Product::getRecords();
+        $stocks = Stock::getRecordsForAddToInventory();
+        $products = Product::getRecordsForAddToInventory();
         $inventories = productInventory::getRecords($this->state);
 
         return view('livewire.admin.product-inventory.product-inventory-list',
@@ -30,6 +30,7 @@ class ProductInventoryList extends Component
         'stocks' => $stocks,
         'products' => $products])->layout('admin.layouts.app');
     }
+
     public function add()
     {
         $this->reset();

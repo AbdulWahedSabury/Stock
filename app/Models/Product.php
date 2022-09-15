@@ -20,6 +20,11 @@ class Product extends Model
         ->latest()->paginate(5);
     }
 
+    public function getRecordsForAddToInventory()
+    {
+        return self::all();
+    }
+
     public function getRecord($id)
     {
         return self::withTrashed()->findOrFail($id);
@@ -27,7 +32,7 @@ class Product extends Model
 
     public function provider()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Provider::class)->withTrashed();
     }
 
     public function sales()
@@ -45,8 +50,4 @@ class Product extends Model
         )->withPivot('quantity');
     }
 
-    public function getInventoryRecords()
-    {
-        return self::whereHas('stocks')->latest()->paginate(5);
-    }
 }

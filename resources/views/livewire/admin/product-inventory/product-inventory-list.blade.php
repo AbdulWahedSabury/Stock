@@ -31,26 +31,32 @@
                   @forelse ($inventories as $in)
                     <tr>
                       <th scope="row">{{ $loop->iteration }}</th>
-                      <td>
-                        {{ $in->product->name }}
-                      </td>
+                      @if (!is_null($in->product->deleted_at))
+                        <td class="text-danger">{{ $in->product->name }}</td>
+                      @else
+                        <td>{{ $in->product->name }}</td>
+                      @endif
+                      @if (!is_null($in->stock->deleted_at))
+                      <td class="text-danger">{{ $in->stock->name }}</td>
+                      @else
                       <td>{{ $in->stock->name }}</td>
+                      @endif
                       <td>{{ $in->quantity }}</td>
                       @if (is_null($in->deleted_at))
                         <td>
-                        <a href="" wire:click.prevent="edit({{ $in }})">
-                          <i class="fa fa-edit mr-2"></i>
-                        </a>
-                        <a href="" wire:click.prevent="ConfirmationDelete({{ $in->id }})">
-                          <i class="fa fa-trash text-red"></i>
-                        </a>
-                    </td>
+                          <a href="" wire:click.prevent="edit({{ $in }})">
+                            <i class="fa fa-edit mr-2"></i>
+                          </a>
+                          <a href="" wire:click.prevent="ConfirmationDelete({{ $in->id }})">
+                            <i class="fa fa-trash text-red"></i>
+                          </a>
+                        </td>
                       @else
                         <td>
-                        <a href="" wire:click.prevent="restore({{ $in->id }})">
-                        <i class="fa fa-undo text-lime" aria-hidden="true"></i>
-                        </a>
-                    </td>
+                          <a href="" wire:click.prevent="restore({{ $in->id }})">
+                            <i class="fa fa-undo text-lime" aria-hidden="true"></i>
+                          </a>
+                        </td>
                       @endif
                     </tr>
                   @empty

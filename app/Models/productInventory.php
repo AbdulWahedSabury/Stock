@@ -30,11 +30,11 @@ class productInventory extends Model
 
     public function stock()
     {
-        return $this->belongsTo(Stock::class);
+        return $this->belongsTo(Stock::class)->withTrashed();
     }
 
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

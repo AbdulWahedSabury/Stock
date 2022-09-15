@@ -19,9 +19,15 @@ class Stock extends Model
         ->orWhere('address','like','%'.$search.'%')
         ->latest()->paginate(5);
     }
+
     public function getRecord($id)
     {
         return self::withTrashed()->findOrFail($id);
+    }
+
+    public function getRecordsForAddToInventory()
+    {
+        return self::all();
     }
 
     public function products()
