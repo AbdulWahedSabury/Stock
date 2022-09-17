@@ -6,12 +6,15 @@ use App\Models\Product;
 use Livewire\Component;
 use App\Models\Provider;
 use App\Models\Purchase;
+use Livewire\WithPagination;
 use App\Models\productInventory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PurchaseList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $list;
     public $state = [];

@@ -2,11 +2,14 @@
 namespace App\Http\Livewire\admin\product;
 use App\Models\Product;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 class ProductList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $product;
     public $state = [];

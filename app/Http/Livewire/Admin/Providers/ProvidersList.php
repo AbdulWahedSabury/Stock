@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Providers;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\Provider;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 
 class ProvidersList extends Component
@@ -14,7 +15,8 @@ class ProvidersList extends Component
     public $state = [];
     public $editeProvidersState = false;
     public $confirmationProviderDeleteId;
-
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public function render()
     {
         $providers = Provider::getRecords($this->search);

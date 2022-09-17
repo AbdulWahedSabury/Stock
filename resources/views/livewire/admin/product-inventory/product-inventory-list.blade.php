@@ -198,4 +198,4 @@
 </div>
 
 </div>
-@include('livewire.admin.product-inventory.js');
+@include('livewire.admin.product-inventory.js')

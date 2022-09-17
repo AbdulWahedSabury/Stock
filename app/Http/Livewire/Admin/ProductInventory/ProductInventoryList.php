@@ -6,12 +6,15 @@ use Throwable;
 use App\Models\Stock;
 use App\Models\Product;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Carbon;
 use App\Models\productInventory;
 use Illuminate\Support\Facades\Validator;
 
 class ProductInventoryList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $inventory;
     public $state = [];

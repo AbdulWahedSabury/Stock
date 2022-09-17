@@ -5,10 +5,13 @@ namespace App\Http\Livewire\Admin\Stock;
 use Carbon\Carbon;
 use App\Models\Stock;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 
 class StochList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $editeState = false;
     public $state = [];

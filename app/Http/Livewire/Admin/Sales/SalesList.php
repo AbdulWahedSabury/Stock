@@ -9,6 +9,7 @@ use App\Models\Stock;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\customer;
+use Livewire\WithPagination;
 use App\Models\productInventory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Request;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Validator;
 
 class SalesList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $list;
     public $state = [];

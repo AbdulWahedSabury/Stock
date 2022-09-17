@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Admin\Users;
 use Hash;
 use App\Models\User;
 use Livewire\Component;
+use Livewire\WithPagination;
 use Livewire\withFileUploads;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +19,8 @@ class UsersLists extends Component
     public $confirmationUserDeleteId;
     public $searchTerm = null;
     public $photo;
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public function render()
     {
         $users = User::query()

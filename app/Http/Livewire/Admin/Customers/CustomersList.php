@@ -2,13 +2,16 @@
 
 namespace App\Http\Livewire\Admin\Customers;
 
+use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\customer;
-use Carbon\Carbon;
+use Livewire\WithPagination;
 use Illuminate\Support\Facades\Validator;
 
 class CustomersList extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'bootstrap';
     public $search;
     public $customer;
     public $state = [];
