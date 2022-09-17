@@ -3,15 +3,15 @@
     <div class="small-box bg-info">
         <div class="inner">
         <div class="d-flex justify-content-between">
-            <h3 wire:loading.delay.remove>{{ $appointmentsCount }}</h3>
+            <h3 wire:loading.delay.remove>{{ $customersCount }}</h3>
             <div wire:loading.delay>
                 <x-ballbeat />
             </div>
-            <select wire:change="getAppointmentsCount($event.target.value)" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
+            {{-- <select wire:change="getAppointmentsCount($event.target.value)" style="height: 2rem; outline: 2px solid transparent;" class="px-1 rounded border-0">
                 <option value="">All</option>
                 <option value="scheduled">Scheduled</option>
                 <option value="closed">Closed</option>
-            </select>
+            </select> --}}
         </div>
         <p>Appointments</p>
         </div>

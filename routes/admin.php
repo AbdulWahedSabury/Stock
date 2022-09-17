@@ -10,7 +10,7 @@ use App\Http\Livewire\Admin\ProductInventory\ProductInventoryList;
 use App\Http\Livewire\Admin\Providers\ProvidersList;
 use App\Http\Livewire\Admin\Purchase\PurchaseList;
 use App\Http\Livewire\Admin\Sales\SalesList;
-use App\Http\Livewire\Admin\Stock\StochList;;
+use App\Http\Livewire\Admin\Stock\StochList;
 
     Route::get('dashboard',DashboardController::class)->name('admin.dashboard');
     Route::get('users',UsersLists::class)->name('admin.users');
