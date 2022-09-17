@@ -27,7 +27,7 @@ class SalesList extends Component
     {
         $sales = Sale::getRecords();
         $inventories = productInventory::getRecordsForSale();
-        $customers = customer::all();
+        $customers = customer::getRecordsForSale();
         return view('livewire.admin.sales.sales-list',[
                 'sales' => $sales,
                 'inventories' => $inventories,
@@ -129,8 +129,22 @@ class SalesList extends Component
 
     public function delete()
     {
-        $list = Sale::getRecord($this->confirmationDeleteId);
-        $list->delete();
-        $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
+        try {
+            DB::beginTransaction();
+            $list = Sale::getRecord($this->confirmationDeleteId);
+            $this->selectedInventory = productInventory::getRecord($list['inventory_id']);
+
+            $this->selectedInventory['quantity'] += $list['quantity'];
+
+            $this->selectedInventory->save();
+            $list->delete();
+
+            DB::commit();
+            $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
+            return redirect()->back();
+        }
     }
 }

@@ -25,6 +25,7 @@
                     <th scope="col">Stock</th>
                     <th scope="col">Product</th>
                     <th scope="col">Quantity</th>
+                    <th scope="col">price</th>
                     <th scope="col">Total price</th>
                     <th scope="col">Date</th>
                   </tr>
@@ -37,7 +38,8 @@
                       <td>{{ $sale->customer->name }}</td>
                       <td>{{ $sale->inventory->stock->name }}</td>
                       <td>{{ $sale->inventory->product->name }}</td>
-                      <td>{{ $sale->quantity }}M</td>
+                      <td>{{ $sale->quantity }}</td>
+                      <td>{{ $sale->s_price }}</td>
                       <td>{{ $sale->total_price }} AF</td>
                       <td>{{ $sale->created_at }}</td>
                       <td>

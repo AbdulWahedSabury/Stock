@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire\Admin\Purchase;
 
-use Throwable;
 use App\Models\Product;
 use Livewire\Component;
 use App\Models\Provider;
@@ -135,8 +134,24 @@ class PurchaseList extends Component
 
     public function delete()
     {
+        try {
+            DB::beginTransaction();
         $list = Purchase::getRecord($this->confirmationDeleteId);
+        $this->selectedInventory = productInventory::getRecord($list['inventory_id']);
+
+        $this->selectedInventory['quantity'] -= $list['quantity'];
+
+        $this->selectedInventory->save();
         $list->delete();
+
+        DB::commit();
         $this->dispatchBrowserEvent('hide-delete-form',['message'=>'product Deleted successfully!']);
+        return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->dispatchBrowserEvent('error', ['message' => 'Some thing is wrong try again!']);
+            return redirect()->back();
+        }
     }
+
 }

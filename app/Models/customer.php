@@ -24,6 +24,12 @@ class customer extends Model
     {
         return self::withTrashed()->findOrFail($id);
     }
+
+    public function getRecordsForSale()
+    {
+        return self::all();
+    }
+
     public function sales()
     {
         return $this->hasMany(Sale::class);
