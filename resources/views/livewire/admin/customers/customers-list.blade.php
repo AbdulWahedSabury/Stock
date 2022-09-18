@@ -9,10 +9,12 @@
         <div class="col-lg-12">
 
           <div class="d-flex justify-content-between mb-2">
+            @if (auth()->user()->hasAuthMinRole("CREATOR"))
             <button wire:click.prevent="add" class="bt btn-primary">
               <i class="fa fa-plus-circle"></i>
               Add new Customer
             </button>
+            @endif
             <x-searchForm wire:model='search' />
           </div>
           <div class="card">
@@ -25,7 +27,9 @@
                     <th scope="col">Name</th>
                     <th scope="col">Last Name</th>
                     <th scope="col">phone</th>
+                    @if (auth()->user()->hasAuthMinRole("EDITOR"))
                     <th scope="col">Oprations</th>
+                    @endif
                   </tr>
                 </thead>
                 <tbody>
@@ -40,6 +44,7 @@
                       <td>
                         {{ $customer->phone }}
                       </td>
+                    @if (auth()->user()->hasAuthMinRole("EDITOR"))
                       @if (is_null($customer->deleted_at))
                         <td>
                         <a href="" wire:click.prevent="edit({{ $customer }})">
@@ -56,6 +61,7 @@
                         </a>
                     </td>
                       @endif
+                    @endif
                     </tr>
                   @empty
                     <x-no-record>

@@ -7,6 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\withFileUploads;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -24,11 +25,12 @@ class UsersLists extends Component
     public function render()
     {
         $users = User::query()
-        ->where('name', 'like', '%' . $this->searchTerm . '%')
-        ->orWhere('email', 'like', '%' . $this->searchTerm . '%')
-        ->latest()->paginate(5);
-        return view('livewire.admin.users.users-lists', compact('users'))
-            ->layout('admin.layouts.app');;
+            ->where('name', 'like', '%' . $this->searchTerm . '%')
+            ->orWhere('email', 'like', '%' . $this->searchTerm . '%')
+            ->latest()->paginate(5);
+        return view('livewire.admin.users.users-lists', [
+            'users' => $users
+        ])->layout('admin.layouts.app');;
     }
 
     public function AddNewUser()
@@ -94,4 +96,17 @@ class UsersLists extends Component
         $this->dispatchBrowserEvent('hide-delete-form', ['message' => 'User Deleted successfully!']);
     }
 
+    public function changeRole(User $user, $role)
+    {
+        Validator::make(['role' => $role], [
+            'role' => [
+                'required',
+                Rule::in(User::ROLEPERMISSIONS),
+            ],
+        ])->validate();
+
+        $user->update(['role' => $role]);
+
+        $this->dispatchBrowserEvent('role_changed', ['message' => "Role changed to {$role} successfully."]);
+    }
 }

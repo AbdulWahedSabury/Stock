@@ -3,6 +3,7 @@
 namespace App\Http\Middleware\admin;
 
 use Closure;
+use Exception;
 use Illuminate\Http\Request;
 
 class Aministration
@@ -16,9 +17,9 @@ class Aministration
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->check() && auth()->user()->isAdmin()){
+        if(auth()->check() && auth()->user()->hasValidRole(auth()->user()->role)){
             return $next($request);
         }
-        abort(403);
+        throw new Exception('The role is not found');
     }
 }

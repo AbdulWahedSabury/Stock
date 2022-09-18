@@ -76,6 +76,10 @@
     window.addEventListener('changed', event => {
       toastr.success(event.detail.message, 'Success!');
     })
+    window.addEventListener('role_changed', event => {
+      toastr.success(event.detail.message, 'Success!');
+    })
+
   </script>
   @stack('styles')
   @stack('js')
